@@ -1,0 +1,45 @@
+
+version: '3'
+
+services:
+#  postgis:
+#    image: kartoza/postgis:9.4-2.1
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_USER=docker
+#      - POSTGRES_PASS=docker
+
+  tomcat:
+    build: tomcat
+    ports: 
+      - "8080:8080"
+    environment:
+      - es_cluster=es-geoportal
+      - es_node=elasticsearch
+
+  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:latest
+    build: elasticsearch
+    container_name: elasticsearch1
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      mem_limit: 1g
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - ES_HEAP_SIZE=2g
+      - cluster.name=es-geoportal
+
+volumes:
+  esdata1:
+    driver: local
+#  esdata2:
+#    driver: local
