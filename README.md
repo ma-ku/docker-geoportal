@@ -6,11 +6,19 @@ This project bundles all prerequisites needed to run the geoportal server and a 
 
 ## Installation
  
-In order to 
+Clone the repository to your local drive. In order to build the containers and run them, use the following commands:
 ```bash
+$ git clone https://github.com/ma-ku/docker-geoportal.git
+$ cd docker-geoportal
+$ docker network create geoportal
 $ docker-compose build
 $ docker-compose up
 ```
+
+## Run the applications
+
+* Connect to http://localhost:8080/geoportal to see the geoportal in action. 
+* Connect to http://localhost:8080/harvester to see the harvester in action. 
 
 ## Requirements
 
