@@ -1,5 +1,5 @@
 FROM tomcat:9
-MAINTAINER Mathias Kühn mathias.kuehn@jeppesen.com
+MAINTAINER Mathias Kühn kuehn@synerva.de
 
 # Install wget and install/updates certificates
 RUN apt-get update \
