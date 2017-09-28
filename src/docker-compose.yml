@@ -3,7 +3,7 @@ version: '3'
 
 services:
   geoportal:
-    build: tomcat
+    build: geoportal
     ports: 
       - "8080:8080"
     hostname: geoportal
@@ -15,20 +15,6 @@ services:
     networks:
       - default
       
-  harvester:
-    build: harvester
-    ports: 
-      - "8090:8080"
-    hostname: harvester
-    environment:
-      - es_cluster=es-geoportal
-      - es_node=elasticsearch
-    links: 
-      - elasticsearch:elasticsearch
-      - geoportal:geoportal
-    networks:
-      - default
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
     container_name: elasticsearch1
@@ -36,18 +22,18 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
- #   ulimits:
- #     memlock:
- #       soft: -1
- #       hard: -1
- #     mem_limit: 1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      mem_limit: 1g
     volumes:
       - esdata1:/usr/share/elasticsearch/data
     environment:
+      - "ES_JAVA_OPTS=-Xms750m -Xmx750m"
       - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - discovery.type=single-node
-#      - ES_HEAP_SIZE=2g
       - cluster.name=es-geoportal
     networks:
       - default
