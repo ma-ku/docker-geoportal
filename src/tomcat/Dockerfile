@@ -12,10 +12,8 @@ ENV GPTURL=https://github.com/Esri/geoportal-server-catalog/releases/download/v2
 
 ADD $GPTURL /tmp/geoportal.zip
 
-RUN mkdir -p $CATALINA_HOME/webapps/geoportal/WEB-INF/classes/config/
-
 WORKDIR $CATALINA_HOME/webapps/
 RUN unzip /tmp/geoportal.zip *.war
 RUN rm /tmp/geoportal.zip
 
-# COPY /1.0-SNAPSHOT/my-app-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/myapp/
+COPY tomcat-users.xml $CATALINA_HOME/conf

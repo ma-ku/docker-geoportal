@@ -10,33 +10,60 @@ services:
 #      - POSTGRES_USER=docker
 #      - POSTGRES_PASS=docker
 
-  tomcat:
+  geoportal:
     build: tomcat
     ports: 
       - "8080:8080"
+    hostname: geoportal
     environment:
       - es_cluster=es-geoportal
       - es_node=elasticsearch
+    links: 
+      - elasticsearch:elasticsearch
+    networks:
+      - default
+      
+  harvester:
+    build: harvester
+    ports: 
+      - "8090:8080"
+    hostname: harvester
+    environment:
+      - es_cluster=es-geoportal
+      - es_node=elasticsearch
+    links: 
+      - elasticsearch:elasticsearch
+      - geoportal:geoportal
+    networks:
+      - default
 
   elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:latest
-    build: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
     container_name: elasticsearch1
     ports:
       - "9200:9200"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      mem_limit: 1g
+      - "9300:9300"
+ #   ulimits:
+ #     memlock:
+ #       soft: -1
+ #       hard: -1
+ #     mem_limit: 1g
+    hostname: elasticsearch
     volumes:
       - esdata1:/usr/share/elasticsearch/data
     environment:
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
-      - ES_HEAP_SIZE=2g
+#      - ES_HEAP_SIZE=2g
       - cluster.name=es-geoportal
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: geoportal
 
 volumes:
   esdata1:
