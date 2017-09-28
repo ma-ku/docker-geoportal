@@ -2,14 +2,6 @@
 version: '3'
 
 services:
-#  postgis:
-#    image: kartoza/postgis:9.4-2.1
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_USER=docker
-#      - POSTGRES_PASS=docker
-
   geoportal:
     build: tomcat
     ports: 
@@ -40,6 +32,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
     container_name: elasticsearch1
+    hostname: elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -48,7 +41,6 @@ services:
  #       soft: -1
  #       hard: -1
  #     mem_limit: 1g
-    hostname: elasticsearch
     volumes:
       - esdata1:/usr/share/elasticsearch/data
     environment:
@@ -68,5 +60,3 @@ networks:
 volumes:
   esdata1:
     driver: local
-#  esdata2:
-#    driver: local
